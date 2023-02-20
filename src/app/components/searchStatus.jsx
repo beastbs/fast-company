@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const SearchStatus = ({ length }) => {
   const isEmpty = !length;
@@ -20,11 +21,15 @@ const SearchStatus = ({ length }) => {
 
   return (
     <h2>
-    <span className={`badge bg-${peopleQuantity ? "primary" : "danger"}`}>
-      {renderPhrase() + " " + "с тобой сегодня"}
-    </span>
+      <span className={`badge bg-${peopleQuantity ? "primary" : "danger"}`}>
+        {renderPhrase() + " " + "с тобой сегодня"}
+      </span>
     </h2>
   );
+};
+
+SearchStatus.propTypes = {
+  length: PropTypes.number
 };
 
 export default SearchStatus;
