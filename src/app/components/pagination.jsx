@@ -17,7 +17,7 @@ const Pagination = ({
 
   return (
     <nav>
-      <ul className="pagination justify-content-center">
+      <ul className="pagination">
         <li className={currentPage <= 1 ? "page-item disabled" : "page-item"}>
           <button
             className="page-link"

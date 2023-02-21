@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Users from "./components/users";
-import SearchStatus from "./components/searchStatus";
 import API from "./api";
 
 const App = () => {
-  const [users, setUsers] = useState(API.users.fetchAll());
+  const [users, setUsers] = useState();
+  const [professions, setProfessions] = useState();
+
+  useEffect(() => {
+    Promise.all([API.users.fetchAll(), API.professions.fetchAll()]).then(
+      (response) => {
+        const [users, professions] = response;
+        setUsers(users);
+        setProfessions(professions);
+      }
+    );
+  }, []);
 
   const handleDeleteUser = (id) => {
     const newUsers = users.filter((user) => user._id !== id);
@@ -26,12 +36,14 @@ const App = () => {
 
   return (
     <div>
-      <SearchStatus length={users.length} />
-      <Users
-        users={users}
-        onDelete={handleDeleteUser}
-        onToggle={handleToggleBookmark}
-      />
+      {users && (
+        <Users
+          users={users}
+          professions={professions}
+          onDelete={handleDeleteUser}
+          onToggle={handleToggleBookmark}
+        />
+      )}
     </div>
   );
 };
