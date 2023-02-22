@@ -14,9 +14,7 @@ const SearchStatus = ({ length }) => {
     }
 
     const lastOne = Number(peopleQuantity.toString().slice(-1));
-    return [2, 3, 4].indexOf(lastOne) >= 0
-      ? `${peopleQuantity} человека тусанут`
-      : `${peopleQuantity} человек тусанет`;
+    return [2, 3, 4].indexOf(lastOne) >= 0 ? `${peopleQuantity} человека тусанут` : `${peopleQuantity} человек тусанет`;
   };
 
   return (

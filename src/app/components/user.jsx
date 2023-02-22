@@ -26,7 +26,7 @@ const User = ({
       <td>{completedMeetings}</td>
       <td>{rate}/5</td>
       <td>
-        <button>
+        <button className="border-0">
           {<Bookmark bookmark={bookmark} id={_id} onToggle={onToggle} />}
         </button>
       </td>
