@@ -2,26 +2,25 @@
 /* eslint-disable multiline-ternary */
 
 import React, { useState, useEffect } from "react";
-import SearchStatus from "./searchStatus";
-import GroupList from "./listGroup";
-import UsersTable from "./usersTable";
-import Pagination from "./pagination";
+import SearchStatus from "../components/searchStatus";
+import GroupList from "../components/listGroup";
+import UsersTable from "../components/usersTable";
+import Pagination from "../components/pagination";
 import { paginate } from "../utils/paginate";
 import API from "../api";
 import _ from "lodash";
 
 const Users = () => {
+  const [users, setUsers] = useState();
+  const [professions, setProfessions] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-  const [users, setUsers] = useState();
-  const [professions, setProfessions] = useState();
-  const pageSize = 8;
+  const pageSize = 4;
 
   useEffect(() => {
     Promise.all([API.users.fetchAll(), API.professions.fetchAll()]).then(
-      (response) => {
-        const [users, professions] = response;
+      ([users, professions]) => {
         setUsers(users);
         setProfessions(professions);
       }

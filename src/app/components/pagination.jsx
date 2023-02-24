@@ -21,14 +21,16 @@ const Pagination = ({
         <li className={currentPage <= 1 ? "page-item disabled" : "page-item"}>
           <button
             className="page-link"
-            onClick={() => onChangePageByArrows(-1)}>
+            onClick={() => onChangePageByArrows(-1)}
+          >
             &laquo;
           </button>
         </li>
         {pages.map((page) => (
           <li
             key={"page_" + page}
-            className={page === currentPage ? "page-item active" : "page-item"}>
+            className={page === currentPage ? "page-item active" : "page-item"}
+          >
             <button className="page-link " onClick={() => onChangePage(page)}>
               {page}
             </button>
@@ -37,7 +39,8 @@ const Pagination = ({
         <li
           className={
             currentPage >= pageCount ? "page-item disabled" : "page-item"
-          }>
+          }
+        >
           <button className="page-link" onClick={() => onChangePageByArrows(1)}>
             &raquo;
           </button>
