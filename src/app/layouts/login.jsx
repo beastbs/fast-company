@@ -17,26 +17,38 @@ const Login = () => {
     email: {
       isRequired: {
         message: "Электронная почта обязательна для заполнения"
+      },
+      isEmail: {
+        message: "Email введен некорректно"
       }
     },
     password: {
       isRequired: {
         message: "Пороль обязателен для заполнения"
+      },
+      isCapitalSymbol: {
+        message: "Пороль должен содержать минимум одну заглавную букву"
+      },
+      isContainDigit: {
+        message: "Пороль должен содержать минимум одно число"
+      },
+      min: {
+        message: "Пороль должен содержать минимум 8 символов",
+        value: 8
+      },
+      max: {
+        message: "Пороль должен содержать максимум 36 символов",
+        value: 36
       }
     }
   };
 
   const validate = () => {
-    // const errors = {};
-    // for (const fieldName in data) {
-    //   if (data[fieldName].trim() === "") {
-    //     errors[fieldName] = `${fieldName} обязателен для заполнения`;
-    //   }
-    // }
     const errors = validator(data, validatorConfig);
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  const isValid = Object.keys(errors).length === 0;
 
   const handleChange = ({ target }) => {
     setData((prevState) => ({
@@ -63,30 +75,46 @@ const Login = () => {
       password: ""
     });
   };
+
   return (
-    <form className="m-2" onSubmit={handleSubmit}>
-      <TextField
-        label="Электронная почта"
-        name="email"
-        value={data.email}
-        onChange={handleChange}
-        error={errors.email}
-      />
-      <TextField
-        label="Пороль"
-        type="password"
-        name="password"
-        value={data.password}
-        onChange={handleChange}
-        error={errors.password}
-      />
-      <button type="submit" className="btn btn-success">
-        Подтвердить
-      </button>
-      <button type="reset" className="btn btn-danger" onClick={handleReset}>
-        Сбросить
-      </button>
-    </form>
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-6 offset-md-3 shadow p-4">
+          <h3 className="mb-4">Login</h3>
+          <form className="m-2" onSubmit={handleSubmit}>
+            <TextField
+              label="Электронная почта"
+              name="email"
+              value={data.email}
+              onChange={handleChange}
+              error={errors.email}
+            />
+            <TextField
+              label="Пороль"
+              type="password"
+              name="password"
+              value={data.password}
+              onChange={handleChange}
+              error={errors.password}
+            />
+            <button
+              type="submit"
+              className="btn btn-success"
+              disabled={!isValid}
+            >
+              Подтвердить
+            </button>
+            <button
+              type="reset"
+              className="btn btn-danger"
+              onClick={handleReset}
+            >
+              Сбросить
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 
