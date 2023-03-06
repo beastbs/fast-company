@@ -2,15 +2,15 @@
 /* eslint-disable multiline-ternary */
 
 import React, { useState, useEffect } from "react";
-import SearchStatus from "./searchStatus";
-import GroupList from "./listGroup";
-import UsersTable from "./usersTable";
-import Pagination from "./pagination";
-import { paginate } from "../utils/paginate";
-import API from "../api";
+import SearchStatus from "../../ui/searchStatus";
+import GroupList from "../../common/listGroup";
+import UsersTable from "../../ui/usersTable";
+import Pagination from "../../common/pagination";
+import { paginate } from "../../../utils/paginate";
+import API from "../../../api";
 import _ from "lodash";
 
-const UsersList = () => {
+const UsersListPage = () => {
   const [users, setUsers] = useState();
   const [professions, setProfessions] = useState();
   const [searchQuery, setSearchQuery] = useState("");
@@ -149,4 +149,4 @@ const UsersList = () => {
   return <h3 className="ms-4">Loading...</h3>;
 };
 
-export default UsersList;
+export default UsersListPage;
