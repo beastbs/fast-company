@@ -31,6 +31,10 @@ export function validator(data, config) {
         statusValidate = data.length > config.value;
         break;
       }
+      case "isRequiredProfession": {
+        statusValidate = data === "";
+        break;
+      }
       default:
         break;
     }

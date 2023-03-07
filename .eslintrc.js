@@ -18,6 +18,6 @@ module.exports = {
       "error",
       { anonymous: "always", named: "never" }
     ],
-    "multiline-ternary": [0, "never"]
+    "multiline-ternary": ["off"]
   }
 };

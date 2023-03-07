@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
-import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
+import TextField from "../common/form/textField";
+import SelectedField from "../common/form/selectField";
+import API from "../../api";
+import RadioField from "../common/form/radioField";
 
-const LoginForm = () => {
+const RegisterForm = () => {
+  const [professions, setProfessions] = useState();
   const [data, setData] = useState({
     email: "",
-    password: ""
+    password: "",
+    profession: "",
+    gender: "male"
   });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    API.professions.fetchAll().then((prof) => setProfessions(prof));
+  }, []);
 
   useEffect(() => {
     validate();
@@ -39,6 +49,11 @@ const LoginForm = () => {
       max: {
         message: "Пороль должен содержать максимум 36 символов",
         value: 36
+      }
+    },
+    profession: {
+      isRequiredProfession: {
+        message: "Профессия обязательна для выбора"
       }
     }
   };
@@ -79,19 +94,38 @@ const LoginForm = () => {
   return (
     <form className="m-2" onSubmit={handleSubmit}>
       <TextField
-        label="Электронная почта"
+        label="*Электронная почта"
         name="email"
         value={data.email}
         onChange={handleChange}
         error={errors.email}
       />
       <TextField
-        label="Пороль"
+        label="*Пороль"
         type="password"
         name="password"
         value={data.password}
         onChange={handleChange}
         error={errors.password}
+      />
+
+      <SelectedField
+        label="*Выберите вашу профессию"
+        value={data.profession}
+        onChange={handleChange}
+        options={professions}
+        error={errors.profession}
+      />
+
+      <RadioField
+        options={[
+          { name: "Male", value: "male" },
+          { name: "Female", value: "female" }
+        ]}
+        value={data.gender}
+        onChange={handleChange}
+        name="gender"
+        label="*Выберите ваш пол"
       />
       <button type="submit" className="btn btn-success" disabled={!isValid}>
         Подтвердить
@@ -103,4 +137,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
