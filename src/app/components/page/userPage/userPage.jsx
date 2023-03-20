@@ -10,21 +10,27 @@ const UserPage = ({ userId }) => {
 
   useEffect(() => {
     API.users.getById(userId).then(setUser);
-  });
+  }, []);
 
-  const handleClick = () => {
+  const handleUpdateUser = () => {
+    history.push(`${history.location.pathname}/edit`);
+  };
+  const handleGetAllUsers = () => {
     history.push("/users");
   };
   return (
     <>
       {user ? (
-        <div>
+        <div className="d-inline-block">
           <h1>{user.name}</h1>
           <h2>Профессия: {user.profession.name}</h2>
           <Qualities qualities={user.qualities} />
           <p>completedMeetings: {user.completedMeetings}</p>
           <h2>Rate: {user.rate}</h2>
-          <button className="btn btn-warning" onClick={handleClick}>
+          <button className="btn btn-warning" onClick={handleUpdateUser}>
+            Редактировать
+          </button>
+          <button className="btn btn-success ms-2" onClick={handleGetAllUsers}>
             Все пользователи
           </button>
         </div>

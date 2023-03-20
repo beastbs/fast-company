@@ -4,12 +4,17 @@ import PropTypes from "prop-types";
 
 const SelectField = ({
   label,
+  name,
   value,
   onChange,
   defaultOption,
   options,
   error
 }) => {
+  const handleChange = ({ target }) => {
+    onChange({ name: target.name, value: target.value });
+  };
+
   const getSelectClasses = () => {
     return `form-select ${error ? "is-invalid" : "is-valid"}`;
   };
@@ -21,17 +26,18 @@ const SelectField = ({
           value: options[optionName]._id
         }))
       : options;
+
   return (
     <div className="mb-4">
-      <label htmlFor="validationCustom04" className="form-label">
+      <label htmlFor={name} className="form-label">
         {label}
       </label>
       <select
         className={getSelectClasses()}
-        id="validationCustom04"
-        name="profession"
+        id={name}
+        name={name}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
       >
         <option disabled value="">
           {defaultOption}
@@ -39,7 +45,7 @@ const SelectField = ({
         {options &&
           optionArray.map((profession) => (
             <option key={profession.value} value={profession.value}>
-              {profession.name}
+              {profession.label || profession.name}
             </option>
           ))}
       </select>
@@ -54,6 +60,7 @@ SelectField.defaultProps = {
 
 SelectField.propTypes = {
   label: PropTypes.string,
+  name: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
   defaultOption: PropTypes.string,

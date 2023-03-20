@@ -84,8 +84,7 @@ const UsersListPage = () => {
     const filteredUsers = searchQuery
       ? users.filter(
           (user) =>
-            user.name.toLowerCase().indexOf(searchQuery.toLocaleLowerCase()) !==
-            -1
+            user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
         )
       : selectedProf
       ? users.filter(
@@ -99,53 +98,56 @@ const UsersListPage = () => {
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
     return (
-      <div className="d-flex">
-        {professions && (
-          <div className="d-flex flex-column flex-shrink-0 p-3">
-            {
-              <GroupList
-                items={professions}
-                selectedItem={selectedProf}
-                onItemSelect={handleProfessionSelect}
-              />
-            }
+      <>
+        <div className="d-flex">
+          {professions && (
+            <div className="d-flex flex-column flex-shrink-0 p-3">
+              {
+                <GroupList
+                  items={professions}
+                  selectedItem={selectedProf}
+                  onItemSelect={handleProfessionSelect}
+                />
+              }
 
-            <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-              Очистить
-            </button>
-          </div>
-        )}
-        <div className="d-flex flex-column">
-          <SearchStatus length={count} />
-          <input
-            type="text"
-            name="searchQuery"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchQuery}
-          />
-          {count > 0 && (
-            <UsersTable
-              users={userCrop}
-              onSort={handleSort}
-              selectedSort={sortBy}
-              onDelete={handleDeleteUser}
-              onToggleBookmark={handleToggleBookmark}
-            />
+              <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+                Очистить
+              </button>
+            </div>
           )}
-          <div className="d-flex justify-content-center">
-            <Pagination
-              itemsCount={count}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onChangePage={handlePageChange}
-              onChangePageByArrows={handlePageChangeByArrows}
+          <div className="d-flex flex-column">
+            <SearchStatus length={count} />
+            <input
+              type="text"
+              name="searchQuery"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchQuery}
             />
+            {count > 0 && (
+              <UsersTable
+                users={userCrop}
+                onSort={handleSort}
+                selectedSort={sortBy}
+                onDelete={handleDeleteUser}
+                onToggleBookmark={handleToggleBookmark}
+              />
+            )}
           </div>
         </div>
-      </div>
+        <div className="d-flex justify-content-center">
+          <Pagination
+            itemsCount={count}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onChangePage={handlePageChange}
+            onChangePageByArrows={handlePageChangeByArrows}
+          />
+        </div>
+      </>
     );
   }
+
   return <h3 className="ms-4">Loading...</h3>;
 };
 

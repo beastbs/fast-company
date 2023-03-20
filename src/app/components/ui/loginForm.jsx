@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
+import CheckBoxField from "../common/form/checkBoxField";
 import { validator } from "../../utils/validator";
 
 const LoginForm = () => {
   const [data, setData] = useState({
     email: "",
-    password: ""
+    password: "",
+    stayOn: false
   });
   const [errors, setErrors] = useState({});
 
@@ -24,20 +26,20 @@ const LoginForm = () => {
     },
     password: {
       isRequired: {
-        message: "Пороль обязателен для заполнения"
+        message: "Пароль обязателен для заполнения"
       },
       isCapitalSymbol: {
-        message: "Пороль должен содержать минимум одну заглавную букву"
+        message: "Пароль должен содержать минимум одну заглавную букву"
       },
       isContainDigit: {
-        message: "Пороль должен содержать минимум одно число"
+        message: "Пароль должен содержать минимум одно число"
       },
       min: {
-        message: "Пороль должен содержать минимум 8 символов",
+        message: "Пароль должен содержать минимум 8 символов",
         value: 8
       },
       max: {
-        message: "Пороль должен содержать максимум 36 символов",
+        message: "Пароль должен содержать максимум 36 символов",
         value: 36
       }
     }
@@ -50,7 +52,7 @@ const LoginForm = () => {
   };
   const isValid = Object.keys(errors).length === 0;
 
-  const handleChange = ({ target }) => {
+  const handleChange = (target) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value
@@ -93,6 +95,9 @@ const LoginForm = () => {
         onChange={handleChange}
         error={errors.password}
       />
+      <CheckBoxField name="stayOn" value={data.stayOn} onChange={handleChange}>
+        Остаться в системе
+      </CheckBoxField>
       <button type="submit" className="btn btn-success" disabled={!isValid}>
         Подтвердить
       </button>
