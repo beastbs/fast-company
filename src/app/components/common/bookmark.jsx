@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Bookmark = ({ id, bookmark, onToggleBookmark }) => {
+const Bookmark = ({ id, bookmark = false, onToggleBookmark }) => {
   const isBookmark = bookmark ? "-fill" : "";
 
   return (
@@ -16,7 +16,7 @@ const Bookmark = ({ id, bookmark, onToggleBookmark }) => {
 
 Bookmark.propTypes = {
   id: PropTypes.string.isRequired,
-  bookmark: PropTypes.bool.isRequired,
+  bookmark: PropTypes.bool,
   onToggleBookmark: PropTypes.func.isRequired
 };
 

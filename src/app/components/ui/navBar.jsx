@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
-    <ul className="nav fs-3">
+    <ul className="nav fs-3 bg-light">
       <li className="nav-item">
         <Link to="/" className="nav-link" aria-current="page">
           Main
