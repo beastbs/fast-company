@@ -26,7 +26,6 @@ const SelectField = ({
           value: options[optionName]._id
         }))
       : options; // options.map((option) => ({ name: option.name, value: option._id }));
-  console.log("optionArray", optionArray);
 
   return (
     <div className="mb-4">

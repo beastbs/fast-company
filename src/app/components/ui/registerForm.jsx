@@ -8,6 +8,8 @@ import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useQuality } from "../../hooks/useQuality";
 import { useProfession } from "../../hooks/useProfession";
+import validatorConfig from "../../config/validatorConfig.json";
+import { useAuth } from "../../hooks/useAuth";
 
 const RegisterForm = () => {
   const { qualities } = useQuality();
@@ -30,10 +32,10 @@ const RegisterForm = () => {
     licence: false
   });
   const [errors, setErrors] = useState({});
+  const { signUp } = useAuth();
 
   // const [professions, setProfessions] = useState([]);
   // const [qualities, setQualities] = useState({});
-
   // useEffect(() => {
   //   API.qualities.fetchAll().then((data) => setQualities(data));
   //   API.professions.fetchAll().then((data) => setProfessions(data));
@@ -42,47 +44,6 @@ const RegisterForm = () => {
   useEffect(() => {
     validate();
   }, [data]);
-
-  const validatorConfig = {
-    email: {
-      isRequired: {
-        message: "Электронная почта обязательна для заполнения"
-      },
-      isEmail: {
-        message: "Email введен некорректно"
-      }
-    },
-    password: {
-      isRequired: {
-        message: "Пороль обязателен для заполнения"
-      },
-      isCapitalSymbol: {
-        message: "Пороль должен содержать минимум одну заглавную букву"
-      },
-      isContainDigit: {
-        message: "Пороль должен содержать минимум одно число"
-      },
-      min: {
-        message: "Пороль должен содержать минимум 8 символов",
-        value: 8
-      },
-      max: {
-        message: "Пороль должен содержать максимум 36 символов",
-        value: 36
-      }
-    },
-    profession: {
-      isRequiredProfession: {
-        message: "Профессия обязательна для выбора"
-      }
-    },
-    licence: {
-      isRequired: {
-        message:
-          "Вы не можете использовать наш сервис без лицензионного соглашения"
-      }
-    }
-  };
 
   const validate = () => {
     const errors = validator(data, validatorConfig);
@@ -112,6 +73,7 @@ const RegisterForm = () => {
       qualities: data.qualities.map((q) => q.value)
     };
     console.log(newData);
+    signUp(newData);
   };
 
   const handleReset = () => {
