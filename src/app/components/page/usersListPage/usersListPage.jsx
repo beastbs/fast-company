@@ -43,8 +43,6 @@ const UsersListPage = () => {
   //   });
   //   // setUsers(newArray)
 
-  //   console.log(newArray);
-  //   console.log("%cid", "color:green;", id);
   // };
 
   useEffect(() => {
@@ -116,34 +114,36 @@ const UsersListPage = () => {
               </button>
             </div>
           )}
-          <div className="d-flex flex-column">
-            <SearchStatus length={count} />
-            <input
-              type="text"
-              name="searchQuery"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={handleSearchQuery}
-            />
-            {count > 0 && (
-              <UsersTable
-                users={userCrop}
-                onSort={handleSort}
-                selectedSort={sortBy}
-                onDelete={handleDeleteUser}
-                onToggleBookmark={handleToggleBookmark}
+          {
+            <div className="d-flex flex-column">
+              <SearchStatus length={count} />
+              <input
+                type="text"
+                name="searchQuery"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchQuery}
               />
-            )}
-          </div>
-        </div>
-        <div className="d-flex justify-content-center">
-          <Pagination
-            itemsCount={count}
-            pageSize={pageSize}
-            currentPage={currentPage}
-            onChangePage={handlePageChange}
-            onChangePageByArrows={handlePageChangeByArrows}
-          />
+              {count > 0 && (
+                <UsersTable
+                  users={userCrop}
+                  onSort={handleSort}
+                  selectedSort={sortBy}
+                  onDelete={handleDeleteUser}
+                  onToggleBookmark={handleToggleBookmark}
+                />
+              )}
+              <div className="d-flex justify-content-center">
+                <Pagination
+                  itemsCount={count}
+                  pageSize={pageSize}
+                  currentPage={currentPage}
+                  onChangePage={handlePageChange}
+                  onChangePageByArrows={handlePageChangeByArrows}
+                />
+              </div>
+            </div>
+          }
         </div>
       </>
     );

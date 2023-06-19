@@ -26,21 +26,19 @@ const UserProvider = ({ children }) => {
     }
   };
 
-  const handleToggleBookmark = (id) => {
-    const newUsers = users.map((user) => {
-      const isEqual = user._id === id;
-      if (isEqual) {
-        if (!user.bookmark) {
-          return { ...user, bookmark: true };
-        } else {
-          return { ...user, bookmark: !user.bookmark };
-        }
-      }
+  const handleToggleBookmark = async (id) => {
+    const newUsers = users.map((user) =>
+      user._id === id ? { ...user, bookmark: !user.bookmark } : user
+    );
+    const toggleBookmarkUser = newUsers.find((user) => user._id === id);
 
-      return user;
-    });
+    try {
+      await userService.put(toggleBookmarkUser);
+      setUsers(newUsers);
+    } catch (error) {
+      errorCatcher(error);
+    }
 
-    setUsers(newUsers);
     console.log("%cid", "background:green;", id);
   };
 

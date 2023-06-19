@@ -3,10 +3,11 @@ import useMockData from "../utils/mockData";
 
 const Main = () => {
   const { initialize, status, progress, error } = useMockData();
+
   const handleClick = () => {
     initialize();
-    console.log("Init");
   };
+
   return (
     <div className="container mt-5">
       <h1>Main page</h1>
@@ -17,11 +18,11 @@ const Main = () => {
         {error && <li>Error: {error}</li>}
       </ul>
       <button
-        disabled={progress === 100}
+        disabled={status === "In process" || progress === 100}
         className="btn btn-primary"
         onClick={handleClick}
       >
-        Инициализировать
+        {status === "Ready" ? "Инициализированно" : "Инициализировать"}
       </button>
     </div>
   );

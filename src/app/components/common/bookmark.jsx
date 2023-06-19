@@ -5,12 +5,11 @@ const Bookmark = ({ id, bookmark = false, onToggleBookmark }) => {
   const isBookmark = bookmark ? "-fill" : "";
 
   return (
-    <button className="border-0">
-      <i
-        className={`bi bi-bookmark-star${isBookmark}`}
-        onClick={() => onToggleBookmark(id)}
-      ></i>
-    </button>
+    <i
+      className={`bi bi-bookmark-star${isBookmark}`}
+      onClick={() => onToggleBookmark(id)}
+      role="button"
+    ></i>
   );
 };
 
