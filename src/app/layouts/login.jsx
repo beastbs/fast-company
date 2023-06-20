@@ -1,37 +1,38 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import LoginForm from "../components/ui/loginForm";
 import RegisterForm from "../components/ui/registerForm";
 
 const Login = () => {
   const { type } = useParams();
-  const [formType, setFormType] = useState(
-    type === "register" ? type : "login"
-  );
+  const [formType, setFormType] = useState();
+
+  useEffect(() => {
+    setFormType(type);
+  }, [type]);
 
   const toggleFormType = () => {
-    setFormType((prevState) =>
-      prevState === "register" ? "login" : "register"
-    );
+    setFormType((prevState) => (prevState === "signUp" ? "signIn" : "signUp"));
   };
 
   return (
     <div className="container mt-5">
       <div className="row">
         <div className="col-md-6 offset-md-3 shadow p-4">
-          {formType === "login" ? (
+          {formType === "signIn" ? (
             <>
               <h3 className="mb-4">Login</h3>
               <LoginForm />
               <p>
                 Don&apos;t have account?{" "}
-                <a
+                <Link
+                  to="/login/signUp"
                   className="text-primary"
                   role="button"
                   onClick={toggleFormType}
                 >
                   Sign Up
-                </a>
+                </Link>
               </p>
             </>
           ) : (
@@ -40,13 +41,14 @@ const Login = () => {
               <RegisterForm />
               <p>
                 Already have account?{" "}
-                <a
+                <Link
+                  to="/login/signIn"
                   className="text-primary"
                   role="button"
                   onClick={toggleFormType}
                 >
                   Sign In
-                </a>
+                </Link>
               </p>
             </>
           )}
