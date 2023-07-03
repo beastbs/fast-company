@@ -33,7 +33,7 @@ const UserProvider = ({ children }) => {
     const toggleBookmarkUser = newUsers.find((user) => user._id === id);
 
     try {
-      await userService.put(toggleBookmarkUser);
+      await userService.create(toggleBookmarkUser);
       setUsers(newUsers);
     } catch (error) {
       errorCatcher(error);

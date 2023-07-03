@@ -1,7 +1,9 @@
-import React, { createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import axios from "axios";
+import userService from "../services/user.service";
+import { setTokens } from "../services/localStorage.service";
 
 const httpAuth = axios.create({});
 
@@ -11,22 +13,15 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const TOKENS = {
-  TOKEN_KEY: "jwt_token",
-  REFRESH_KEY: "jwt_refresh-token",
-  EXPIRES_KEY: "jwt_expires"
-};
-
 const AuthProvider = ({ children }) => {
-  function setTokens({ refreshToken, idToken, expiresIn = 3600 }) {
-    const expiresDate = new Date().getTime() + expiresIn * 1000;
-    localStorage.setItem(TOKENS.TOKEN_KEY, idToken);
-    localStorage.setItem(TOKENS.REFRESH_KEY, refreshToken);
-    localStorage.setItem(TOKENS.EXPIRES_KEY, expiresDate);
-  }
-  async function signUp({ email, password }) {
-    const API_KEY = "AIzaSyCqFbpWGxKI5Fc4CsI0BKyMhhMw73sWbc0";
-    const URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
+  const [currentUser, setCurrentUser] = useState({});
+  const [error, setError] = useState(null);
+
+  // console.log(process.env);
+
+  async function signUp({ email, password, ...rest }) {
+    // const keyFireBasePrivate = "AIzaSyCqFbpWGxKI5Fc4CsI0BKyMhhMw73sWbc0";
+    const URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
 
     try {
       const { data } = await httpAuth.post(URL, {
@@ -34,15 +29,39 @@ const AuthProvider = ({ children }) => {
         password,
         returnSecureToken: true
       });
+      createUser({ _id: data.localId, email, ...rest });
       setTokens(data);
       console.log("data", data);
     } catch (error) {
-      const { message } = error.response.data.error;
-      toast.error(message);
+      errorCatcher(error);
     }
   }
+
+  async function createUser(data) {
+    try {
+      const { content } = await userService.create(data);
+      setCurrentUser(content);
+    } catch (error) {
+      errorCatcher(error);
+    }
+  }
+
+  function errorCatcher(error) {
+    const { message } = error.response.data.error;
+    setError(message);
+  }
+
+  useEffect(() => {
+    if (error !== null) {
+      toast.error(error);
+      setError(null);
+    }
+  }, [error]);
+
   return (
-    <AuthContext.Provider value={{ signUp }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ signUp, currentUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 AuthProvider.propTypes = {

@@ -6,8 +6,8 @@ const userService = {
     const { data } = await httpService.get(userEndpoint);
     return data;
   },
-  put: async (user) => {
-    const { data } = await httpService.put(userEndpoint + user._id, user);
+  create: async (payload) => {
+    const { data } = await httpService.put(userEndpoint + payload._id, payload);
     return data;
   },
   delete: async (id) => {

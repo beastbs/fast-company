@@ -4,6 +4,7 @@ import CheckBoxField from "../common/form/checkBoxField";
 import { validator } from "../../utils/validator";
 
 const LoginForm = () => {
+  console.log(process.env);
   const [data, setData] = useState({
     email: "",
     password: "",
