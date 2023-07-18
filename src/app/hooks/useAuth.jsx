@@ -3,9 +3,16 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import axios from "axios";
 import userService from "../services/user.service";
-import { setTokens } from "../services/localStorage.service";
+import localStorageService, {
+  setTokens
+} from "../services/localStorage.service";
 
-const httpAuth = axios.create({});
+export const httpAuth = axios.create({
+  baseURL: "https://identitytoolkit.googleapis.com/v1/",
+  params: {
+    key: process.env.REACT_APP_FIREBASE_KEY // Добавляем как параметр (?key)
+  }
+});
 
 const AuthContext = createContext();
 
@@ -14,26 +21,88 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState();
   const [error, setError] = useState(null);
+  const [isLoading, setLoading] = useState(true);
 
-  // console.log(process.env);
+  useEffect(() => {
+    if (localStorageService.getAccessToken()) {
+      getUserData();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  async function getUserData() {
+    try {
+      const { content } = await userService.getCurrentUser();
+      setCurrentUser(content);
+    } catch (error) {
+      errorCatcher(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 
   async function signUp({ email, password, ...rest }) {
     // const keyFireBasePrivate = "AIzaSyCqFbpWGxKI5Fc4CsI0BKyMhhMw73sWbc0";
-    const URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+    // const URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keyFireBasePrivate}`;
 
     try {
-      const { data } = await httpAuth.post(URL, {
+      const { data } = await httpAuth.post(`accounts:signUp`, {
         email,
         password,
         returnSecureToken: true
       });
-      createUser({ _id: data.localId, email, ...rest });
+      await createUser({
+        name: "user one",
+        _id: data.localId,
+        email,
+        rate: randomInt(1, 5),
+        complitedMeetings: randomInt(0, 200),
+        ...rest
+      });
       setTokens(data);
-      console.log("data", data);
+      toast.success("Пользователь зарегистрирован");
     } catch (error) {
       errorCatcher(error);
+      const { code, message } = error.response.data.error;
+      if (code === 400) {
+        if (message === "EMAIL_EXISTS") {
+          const objectError = {
+            email: "Пользователь с таким Email уже существует!"
+          };
+          throw objectError; // Expected error object - не можем просто передать throw {email: ""}
+        }
+      }
+    }
+  }
+
+  async function signIn({ email, password }) {
+    try {
+      const { data } = await httpAuth.post(`accounts:signInWithPassword`, {
+        email,
+        password,
+        returnSecureToken: true
+      });
+      setTokens(data);
+      await getUserData();
+    } catch (error) {
+      errorCatcher(error);
+      const { code, message } = error.response.data.error;
+      if (code === 400) {
+        switch (message) {
+        case "EMAIL_NOT_FOUND":
+        case "INVALID_PASSWORD":
+          throw new Error("Email или password введены не коректно");
+        default:
+          throw new Error("Слишком много попыток входа. Попробуйте позднее");
+        }
+      }
     }
   }
 
@@ -59,8 +128,8 @@ const AuthProvider = ({ children }) => {
   }, [error]);
 
   return (
-    <AuthContext.Provider value={{ signUp, currentUser }}>
-      {children}
+    <AuthContext.Provider value={{ signUp, signIn, currentUser, isLoading }}>
+      {!isLoading ? children : "Loading..."}
     </AuthContext.Provider>
   );
 };

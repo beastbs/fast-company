@@ -5,7 +5,7 @@ import RegisterForm from "../components/ui/registerForm";
 
 const Login = () => {
   const { type } = useParams();
-  const [formType, setFormType] = useState();
+  const [formType, setFormType] = useState("signIn");
 
   useEffect(() => {
     setFormType(type);

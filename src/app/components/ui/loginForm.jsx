@@ -2,15 +2,20 @@ import React, { useState, useEffect } from "react";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import { validator } from "../../utils/validator";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const LoginForm = () => {
-  console.log(process.env);
+  // console.log(process.env);
   const [data, setData] = useState({
     email: "",
     password: "",
     stayOn: false
   });
   const [errors, setErrors] = useState({});
+  const [enterError, setEnterError] = useState(null);
+  const { signIn } = useAuth();
+  const history = useHistory();
 
   useEffect(() => {
     validate();
@@ -20,28 +25,11 @@ const LoginForm = () => {
     email: {
       isRequired: {
         message: "Электронная почта обязательна для заполнения"
-      },
-      isEmail: {
-        message: "Email введен некорректно"
       }
     },
     password: {
       isRequired: {
         message: "Пароль обязателен для заполнения"
-      },
-      isCapitalSymbol: {
-        message: "Пароль должен содержать минимум одну заглавную букву"
-      },
-      isContainDigit: {
-        message: "Пароль должен содержать минимум одно число"
-      },
-      min: {
-        message: "Пароль должен содержать минимум 8 символов",
-        value: 8
-      },
-      max: {
-        message: "Пароль должен содержать максимум 36 символов",
-        value: 36
       }
     }
   };
@@ -58,9 +46,11 @@ const LoginForm = () => {
       ...prevState,
       [target.name]: target.value
     }));
+
+    setEnterError(null);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const isValid = validate();
 
@@ -69,7 +59,14 @@ const LoginForm = () => {
       return;
     }
 
-    console.log(data);
+    try {
+      await signIn(data);
+      history.push(
+        history.location.state ? history.location.state.from.pathname : "/"
+      );
+    } catch (error) {
+      setEnterError(error.message);
+    }
   };
 
   const handleReset = () => {
@@ -99,7 +96,12 @@ const LoginForm = () => {
       <CheckBoxField name="stayOn" value={data.stayOn} onChange={handleChange}>
         Остаться в системе
       </CheckBoxField>
-      <button type="submit" className="btn btn-success" disabled={!isValid}>
+      {enterError && <p className="text-danger">{enterError}</p>}
+      <button
+        type="submit"
+        className="btn btn-success"
+        disabled={!isValid || enterError}
+      >
         Подтвердить
       </button>
       <button type="reset" className="btn btn-danger" onClick={handleReset}>

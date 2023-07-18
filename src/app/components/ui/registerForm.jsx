@@ -10,8 +10,10 @@ import { useQuality } from "../../hooks/useQuality";
 import { useProfession } from "../../hooks/useProfession";
 import validatorConfig from "../../config/validatorConfig.json";
 import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
+  const history = useHistory();
   const { qualities } = useQuality();
   const qualitiesList = qualities.map((q) => ({
     label: q.name,
@@ -19,12 +21,13 @@ const RegisterForm = () => {
     color: q.color
   }));
   const { professions } = useProfession();
-  const professionsList = professions.map(p => ({
+  const professionsList = professions.map((p) => ({
     label: p.name,
     value: p._id
   }));
   const [data, setData] = useState({
     email: "",
+    name: "",
     password: "",
     profession: "",
     gender: "male",
@@ -59,7 +62,7 @@ const RegisterForm = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const isValid = validate();
 
@@ -72,7 +75,13 @@ const RegisterForm = () => {
       ...data,
       qualities: data.qualities.map((q) => q.value)
     };
-    signUp(newData);
+
+    try {
+      await signUp(newData);
+      history.push("/");
+    } catch (error) {
+      setErrors(error);
+    }
   };
 
   const handleReset = () => {
@@ -94,6 +103,13 @@ const RegisterForm = () => {
         value={data.email}
         onChange={handleChange}
         error={errors.email}
+      />
+      <TextField
+        label="*Имя"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        error={errors.name}
       />
       <TextField
         label="*Пороль"

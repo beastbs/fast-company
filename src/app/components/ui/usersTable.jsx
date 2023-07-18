@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TableHeader from "../common/table/tableHeader";
 import TableBody from "../common/table/tableBody";
 import Bookmark from "../common/bookmark";
-import Qualities from "./qualities";
+import QualitiesList from "./qualities";
 import Table from "../common/table";
 import { Link } from "react-router-dom";
 import Profession from "./profession";
@@ -24,10 +24,13 @@ const UsersTable = ({
     },
     qualities: {
       name: "Качества",
-      component: (user) => <Qualities qualities={user.qualities} />
+      component: (user) => <QualitiesList qualities={user.qualities} />
     },
     // profession: { path: "profession.name", name: "Профессия" },
-    profession: { name: "Профессия", component: (user) => <Profession id={user.profession} /> },
+    profession: {
+      name: "Профессия",
+      component: (user) => <Profession id={user.profession} />
+    },
     completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
     rate: { path: "rate", name: "Оценка" },
     bookmark: {

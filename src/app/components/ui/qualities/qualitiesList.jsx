@@ -10,9 +10,9 @@ const QualitiesList = ({ qualities }) => {
 
   return (
     <>
-      {qualities.map((qual) => (
+      {qualities ? qualities.map((qual) => (
         <Quality key={qual} id={qual} />
-      ))}
+      )) : <span className="m-1 badge bg-secondary">Недоступно</span>}
     </>
   );
 };

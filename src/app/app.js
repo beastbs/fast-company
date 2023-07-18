@@ -4,10 +4,13 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import ProtectedRoute from "./components/common/protectedRoute";
+
 import NavBar from "./components/ui/navBar";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
 import Users from "./layouts/users";
+
 import ProfessionProvider from "./hooks/useProfession";
 import QualityProvider from "./hooks/useQuality";
 import AuthProvider from "./hooks/useAuth";
@@ -17,17 +20,22 @@ const App = () => {
     <div>
       <AuthProvider>
         <NavBar />
-        <Switch>
-          <Route path="/" exact component={Main} />
+
+        <QualityProvider>
           <ProfessionProvider>
-            <QualityProvider>
+            <Switch>
+              <Route path="/" exact component={Main} />
               <Route path="/login/:type?" component={Login} />
-              <Route path="/users/:userId?/:edit?" component={Users} />
-            </QualityProvider>
+              <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
+              {/* <ProtectedRoute>
+                <Route to="/users/:userId?/:edit?" component={Users} />
+              </ProtectedRoute> */}
+              <Redirect to="/" />
+            </Switch>
           </ProfessionProvider>
-          <Redirect to="/" />
-        </Switch>
+        </QualityProvider>
       </AuthProvider>
+
       <ToastContainer />
     </div>
   );
