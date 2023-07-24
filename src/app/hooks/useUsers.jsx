@@ -14,6 +14,10 @@ const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   const handleDeleteUser = async (id) => {
     console.log("delete id", id);
     try {
@@ -42,10 +46,6 @@ const UserProvider = ({ children }) => {
     console.log("%cid", "background:green;", id);
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
   const getUsers = async () => {
     try {
       const { content } = await userService.get();
@@ -54,6 +54,10 @@ const UserProvider = ({ children }) => {
     } catch (error) {
       errorCatcher(error);
     }
+  };
+
+  const getUserById = (userId) => {
+    return users.find((user) => user._id === userId);
   };
 
   function errorCatcher(error) {
@@ -71,7 +75,7 @@ const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ users, handleDeleteUser, handleToggleBookmark }}
+      value={{ users, getUserById, handleDeleteUser, handleToggleBookmark }}
     >
       {!isLoading ? children : "Loading..."}
     </UserContext.Provider>

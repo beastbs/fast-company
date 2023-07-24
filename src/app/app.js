@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/common/protectedRoute";
 import NavBar from "./components/ui/navBar";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
+import LogOut from "./layouts/logOut";
 import Users from "./layouts/users";
 
 import ProfessionProvider from "./hooks/useProfession";
@@ -26,6 +27,7 @@ const App = () => {
             <Switch>
               <Route path="/" exact component={Main} />
               <Route path="/login/:type?" component={Login} />
+              <Route path="/logout" component={LogOut} />
               <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
               {/* <ProtectedRoute>
                 <Route to="/users/:userId?/:edit?" component={Users} />

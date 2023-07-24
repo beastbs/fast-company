@@ -10,7 +10,6 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
     <Route
       {...rest}
       render={(props) => {
-        console.log("props", props);
         if (!currentUser) {
           //  return <Redirect to="/login/signIn" />;
           return (
@@ -21,7 +20,7 @@ const ProtectedRoute = ({ component: Component, children, ...rest }) => {
               }}
             />
           );
-          // state - данные к-ые нам необходимо сохранить к-ын мы получаем в данный момент времени
+          // state - данные к-ые нам необходимо сохранить к-ые мы получаем в данный момент времени
         }
         return Component ? <Component {...props} /> : children;
       }}

@@ -33,6 +33,7 @@ const EditUserPage = () => {
         profession: profession._id
       }))
     );
+
     API.professions.fetchAll().then((data) => {
       const professionsList = Object.keys(data).map((professionName) => ({
         label: data[professionName].name,
@@ -41,6 +42,7 @@ const EditUserPage = () => {
       console.log("professionsList", professionsList);
       setProfessions(professionsList);
     });
+
     API.qualities.fetchAll().then((data) => {
       const qualitiesList = Object.keys(data).map((optionName) => ({
         value: data[optionName]._id,

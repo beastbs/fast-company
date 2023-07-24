@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import API from "../../../api";
+// import API from "../../../api";
+
+import { useUser } from "../../../hooks/useUsers";
 import UserCard from "../../ui/userCard";
 import QualitiesCard from "../../ui/qualitiesCard";
 import MeetingsCard from "../../ui/meetingsCard";
 import Comments from "../../ui/comments";
+import { CommentsProvider } from "../../../hooks/useComments";
 
 const UserPage = ({ userId }) => {
-  const [user, setUser] = useState();
+  // const [user, setUser] = useState();
 
-  useEffect(() => {
-    API.users.getById(userId).then(setUser);
-  }, []);
+  // useEffect(() => {
+  //   API.users.getById(userId).then(setUser);
+  // }, []);
+  const { getUserById } = useUser();
+  const user = getUserById(userId);
 
   if (user) {
     return (
@@ -23,7 +28,9 @@ const UserPage = ({ userId }) => {
             <MeetingsCard value={user.completedMeetings} />
           </div>
           <div className="col-md-8 mb-3">
-            <Comments />
+            <CommentsProvider>
+              <Comments />
+            </CommentsProvider>
           </div>
         </div>
       </div>

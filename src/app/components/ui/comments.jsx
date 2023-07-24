@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import API from "../../api";
+import React from "react";
+// import { useParams } from "react-router-dom";
+// import API from "../../api";
 import { orderBy } from "lodash";
 
 import CommentsList, { AddCommentForm } from "../common/comments";
 import Divider from "../common/divider";
 
+import { useComments } from "../../hooks/useComments";
+
 const Comments = () => {
-  const { userId } = useParams();
-  const [comments, setComments] = useState();
-  useEffect(() => {
-    API.comments.fetchCommentsForUser(userId).then(setComments);
-  }, []);
+  // const { userId } = useParams();
+  // const [comments, setComments] = useState();
+  const { comments, createComment, removeComment } = useComments();
+
+  // useEffect(() => {
+  //   API.comments.fetchCommentsForUser(userId).then(setComments);
+  // }, []);
+
   const handleSubmit = (data) => {
-    API.comments
-      .add({ ...data, pageId: userId })
-      .then((data) => setComments([...comments, data]));
+    createComment(data);
+
+    // API.comments
+    //   .add({ ...data, pageId: userId })
+    //   .then((data) => setComments([...comments, data]));
   };
+
   const handleRemoveComment = (id) => {
-    API.comments.remove(id).then((id) => {
-      setComments(comments.filter((x) => x._id !== id));
-    });
+    removeComment(id);
   };
   const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
 

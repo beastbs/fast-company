@@ -4,8 +4,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import userService from "../services/user.service";
 import localStorageService, {
+  removeAuthData,
   setTokens
 } from "../services/localStorage.service";
+import { useHistory } from "react-router-dom";
+import { createRandomImage } from "../utils/optimization";
 
 export const httpAuth = axios.create({
   baseURL: "https://identitytoolkit.googleapis.com/v1/",
@@ -24,6 +27,7 @@ const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     if (localStorageService.getAccessToken()) {
@@ -51,7 +55,6 @@ const AuthProvider = ({ children }) => {
   async function signUp({ email, password, ...rest }) {
     // const keyFireBasePrivate = "AIzaSyCqFbpWGxKI5Fc4CsI0BKyMhhMw73sWbc0";
     // const URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${keyFireBasePrivate}`;
-
     try {
       const { data } = await httpAuth.post(`accounts:signUp`, {
         email,
@@ -62,12 +65,15 @@ const AuthProvider = ({ children }) => {
         name: "user one",
         _id: data.localId,
         email,
+        image: createRandomImage(),
         rate: randomInt(1, 5),
-        complitedMeetings: randomInt(0, 200),
+        completedMeetings: randomInt(0, 200),
         ...rest
       });
       setTokens(data);
-      toast.success("Пользователь зарегистрирован");
+      toast.success("Пользователь зарегистрирован", {
+        position: toast.POSITION.TOP_CENTER
+      });
     } catch (error) {
       errorCatcher(error);
       const { code, message } = error.response.data.error;
@@ -106,6 +112,12 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  function signOut() {
+    setCurrentUser(null);
+    removeAuthData();
+    history.push("/");
+  }
+
   async function createUser(data) {
     try {
       const { content } = await userService.create(data);
@@ -128,8 +140,8 @@ const AuthProvider = ({ children }) => {
   }, [error]);
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn, currentUser, isLoading }}>
-      {!isLoading ? children : "Loading..."}
+    <AuthContext.Provider value={{ signUp, signIn, signOut, currentUser, isLoading }}>
+      {!isLoading ? children : "Loading..."}{/* Добавляем блокирующую загрузку */}
     </AuthContext.Provider>
   );
 };
